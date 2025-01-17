@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerceApi.Persistence.Migrations
 {
     [DbContext(typeof(ECommerceApiDbContext))]
-    [Migration("20250113233239_Initial")]
+    [Migration("20250115164744_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,6 +32,9 @@ namespace ECommerceApi.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -56,19 +59,19 @@ namespace ECommerceApi.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("CustomerId1")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Orders");
                 });
@@ -82,12 +85,15 @@ namespace ECommerceApi.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<int>("Stock")
                         .HasColumnType("integer");
@@ -116,7 +122,7 @@ namespace ECommerceApi.Persistence.Migrations
                 {
                     b.HasOne("ECommerceApi.Domain.Entities.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId1")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
