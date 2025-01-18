@@ -9,6 +9,7 @@ import {CustomersModule} from '../../components/customers/customers.module';
 import {DashboardComponent} from '../../components/dashboard/dashboard.component';
 import {DashboardModule} from '../../components/dashboard/dashboard.module';
 import {RouterLink, RouterModule} from '@angular/router';
+import {MatListModule} from '@angular/material/list';
 
 
 
@@ -25,7 +26,8 @@ import {RouterLink, RouterModule} from '@angular/router';
     CustomersModule,
     DashboardModule,
     RouterLink,
-    RouterModule
+    RouterModule,
+    MatListModule
   ],
   exports: [
     HeaderComponent,
