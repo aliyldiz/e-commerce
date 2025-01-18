@@ -8,6 +8,7 @@ import {OrdersModule} from '../../components/orders/orders.module';
 import {CustomersModule} from '../../components/customers/customers.module';
 import {DashboardComponent} from '../../components/dashboard/dashboard.component';
 import {DashboardModule} from '../../components/dashboard/dashboard.module';
+import {RouterLink, RouterModule} from '@angular/router';
 
 
 
@@ -22,7 +23,9 @@ import {DashboardModule} from '../../components/dashboard/dashboard.module';
     ProductsModule,
     OrdersModule,
     CustomersModule,
-    DashboardModule
+    DashboardModule,
+    RouterLink,
+    RouterModule
   ],
   exports: [
     HeaderComponent,
