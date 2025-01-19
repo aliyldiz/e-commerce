@@ -22,16 +22,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("get")]
-    public async Task Get()
+    public async Task<IActionResult> Get()
     {
-        var spec = "b360cb2d-3acd-4f73-8d4f-9883abe61eee";
-        var specid = Guid.Parse(spec);
-        Order a = await _orderRepository.GetByIdAsync(specid,noTracking:false);
-        Console.WriteLine(a.Address);
-        a.Address = "kurucesme";
-        await _orderRepository.SaveChangesAsync(); 
-        Console.WriteLine(a.Address);
+        var a = await _orderRepository.GetAllAsync();
+        return Ok(a);
     }
     
     [HttpGet]
