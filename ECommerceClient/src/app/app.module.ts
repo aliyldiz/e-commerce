@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import {AdminModule} from './admin/admin.module';
 import {UiModule} from './ui/ui.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -16,7 +17,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    AdminModule, UiModule
+    AdminModule, UiModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+    })
   ],
   providers: [
     provideClientHydration(),
