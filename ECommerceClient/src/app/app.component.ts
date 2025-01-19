@@ -10,11 +10,4 @@ declare var $: any;
 export class AppComponent {
   title = 'ECommerceClient';
 
-  ngOnInit() {
-    if (typeof window !== 'undefined') {
-      $(document).ready(() => {
-        alert("Hello World");
-      });
-    }
-  }
 }

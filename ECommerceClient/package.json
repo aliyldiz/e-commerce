@@ -24,6 +24,7 @@
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.10",
     "@schematics/angular": "^19.1.2",
+    "alertifyjs": "^1.14.0",
     "bootstrap": "^5.3.3",
     "express": "^4.18.2",
     "jquery": "^3.7.1",

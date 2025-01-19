@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+  constructor() {
+  }
 
+  ngOnInit() {
+
+  }
 }
