@@ -26,9 +26,9 @@ public class ProductsController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get(string id)
     {
-        return Ok(await _productRepository.GetByIdAsync(id));
+        return Ok(await _productRepository.GetByIdAsync(Guid.Parse(id)));
     }
 
     [HttpPost]

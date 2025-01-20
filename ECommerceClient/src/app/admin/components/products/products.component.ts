@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {BaseComponent, SpinnerType} from '../../../base/base.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {HttpClientService} from '../../../services/common/http-client.service';
-import {Product} from '../../../contracts/product';
+import {Create_Product} from '../../../contracts/create-product';
 
 @Component({
   selector: 'app-admin-products',
@@ -17,7 +17,7 @@ export class ProductsComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     this.showSpinner(SpinnerType.BallAtom);
 
-    this.httpClient.get<Product[]>({
+    this.httpClient.get<Create_Product[]>({
       controller: 'products'
     }).subscribe(data => console.log(data));
 
