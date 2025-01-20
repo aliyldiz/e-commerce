@@ -1,5 +1,7 @@
+using System.Net;
 using Bogus;
 using ECommerceApi.Application.Repositories;
+using ECommerceApi.Application.ViewModels.Products;
 using ECommerceApi.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,30 +13,53 @@ namespace ECommerceApi.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
-    private readonly ICustomerRepository _customerRepository;
-    private readonly IOrderRepository _orderRepository;
 
-    public ProductsController(IProductRepository productRepository, IOrderRepository orderRepository, ICustomerRepository customerRepository)
+    public ProductsController(IProductRepository productRepository)
     {
         _productRepository = productRepository;
-        _orderRepository = orderRepository;
-        _customerRepository = customerRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var a = await _orderRepository.GetAllAsync();
-        return Ok(a);
+        return Ok(await _productRepository.GetAllAsync());
     }
     
-    [HttpGet]
-    [Route("getsp")]
-    public async Task<IActionResult> Getsp()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(Guid id)
     {
-        var spec = "b360cb2d-3acd-4f73-8d4f-9883abe61eee";
-        var specid = Guid.Parse(spec);
-        Order a = await _orderRepository.GetByIdAsync(specid,noTracking:false);
-        return Ok(a.Address);
+        return Ok(await _productRepository.GetByIdAsync(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(ProductCreateVM model)
+    {
+        await _productRepository.AddAsync(new Product()
+        {
+            Name = model.Name,
+            Price = model.Price,
+            Stock = model.Stock
+        });
+        await _productRepository.SaveChangesAsync();
+        return StatusCode((int)HttpStatusCode.Created);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Put(ProductUpdateVM model)
+    {
+        var product = await _productRepository.GetByIdAsync(model.Id, false);
+        product.Name = model.Name;
+        product.Price = model.Price;
+        product.Stock = model.Stock;
+        await _productRepository.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _productRepository.DeleteAsync(Guid.Parse(id));
+        await _productRepository.SaveChangesAsync();
+        return Ok();
     }
 }
