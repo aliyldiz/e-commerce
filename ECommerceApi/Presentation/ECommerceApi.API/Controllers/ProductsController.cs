@@ -34,6 +34,10 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(ProductCreateVM model)
     {
+        if (ModelState.IsValid)
+        {
+            
+        }
         await _productRepository.AddAsync(new Product()
         {
             Name = model.Name,
