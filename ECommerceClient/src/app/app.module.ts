@@ -24,7 +24,7 @@ import {HttpClientModule} from "@angular/common/http";
       timeOut: 5000,
     }),
     NgxSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     { provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},

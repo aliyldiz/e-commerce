@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {Create_Product} from '../../../../contracts/create-product';
 import {ProductService} from '../../../../services/common/models/product.service';
 import {BaseComponent, SpinnerType} from '../../../../base/base.component';
@@ -15,32 +15,14 @@ export class CreateComponent extends BaseComponent {
     super(spinner);
   }
 
+  @Output() createdProduct: EventEmitter<Create_Product> = new EventEmitter();
+
   create(name: HTMLInputElement, stock: HTMLInputElement, price: HTMLInputElement) {
     this.showSpinner(SpinnerType.BallAtom);
     const createProduct: Create_Product = new Create_Product();
     createProduct.name = name.value;
     createProduct.stock = parseInt(stock.value);
     createProduct.price = parseFloat(price.value);
-
-    // if (!name.value) {
-    //   this.hideSpinner(SpinnerType.BallAtom);
-    //   this.alertify.message("Name is required", {
-    //     dismissOthers: true,
-    //     messageType: MessageType.Error,
-    //     position: Position.TopRight
-    //   });
-    //   return;
-    // }
-    //
-    // if (parseInt(stock.value) <= 0) {
-    //   this.hideSpinner(SpinnerType.BallAtom);
-    //   this.alertify.message("Stock must be greater than 0", {
-    //     dismissOthers: true,
-    //     messageType: MessageType.Error,
-    //     position: Position.TopRight
-    //   });
-    //   return;
-    // }
 
     this.productService.create(createProduct, () => {
       this.hideSpinner(SpinnerType.BallAtom);
@@ -49,6 +31,7 @@ export class CreateComponent extends BaseComponent {
         messageType: MessageType.Success,
         position: Position.TopRight
       });
+      this.createdProduct.emit(createProduct);
     }, errorMessage => {
       this.alertify.message(errorMessage, {
         dismissOthers: true,

@@ -1,6 +1,7 @@
 using System.Net;
 using Bogus;
 using ECommerceApi.Application.Repositories;
+using ECommerceApi.Application.RequestParameters;
 using ECommerceApi.Application.ViewModels.Products;
 using ECommerceApi.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,17 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery]Pagination pagination)
     {
-        return Ok(await _productRepository.GetAllAsync());
+        await Task.Delay(1500);
+        var totalCount = _productRepository.Get(null, true, null).Count();
+        var products = _productRepository.Get(null, true, null).Skip((pagination.Page) * pagination.Size).Take(pagination.Size).ToList();
+        
+        return Ok(new
+        {
+            totalCount,
+            products
+        });
     }
     
     [HttpGet("{id}")]
@@ -34,10 +43,6 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(ProductCreateVM model)
     {
-        if (ModelState.IsValid)
-        {
-            
-        }
         await _productRepository.AddAsync(new Product()
         {
             Name = model.Name,
