@@ -27,7 +27,7 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule,
   ],
   providers: [
-    { provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
+    {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
     provideClientHydration(),
     provideAnimationsAsync()
   ],

@@ -6,7 +6,7 @@ import {BaseComponent, SpinnerType} from '../../../../base/base.component';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AlertifyService, MessageType, Position} from '../../../../services/admin/alertify.service';
 import {MatPaginator} from '@angular/material/paginator';
-
+declare var $: any;
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -18,7 +18,7 @@ export class ListComponent extends BaseComponent implements OnInit {
     super(spinner);
   }
 
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'modifiedDate'];
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'modifiedDate', 'edit', 'delete'];
   dataSource: MatTableDataSource<List_Product> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -33,6 +33,11 @@ export class ListComponent extends BaseComponent implements OnInit {
     this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
     this.paginator.length = allProducts.totalCount;
   }
+
+  // delete(id, event) {
+  //   const img: HTMLInputElement = event.srcElement;
+  //   $(img.parentElement.parentElement).fadeOut(2000);
+  // }
 
   async pageChanged() {
     await this.getProducts();

@@ -23,7 +23,6 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery]Pagination pagination)
     {
-        await Task.Delay(1500);
         var totalCount = _productRepository.Get(null, true, null).Count();
         var products = _productRepository.Get(null, true, null).Skip((pagination.Page) * pagination.Size).Take(pagination.Size).ToList();
         
