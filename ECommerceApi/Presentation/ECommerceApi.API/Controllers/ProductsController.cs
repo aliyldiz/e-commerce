@@ -14,10 +14,12 @@ namespace ECommerceApi.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ProductsController(IProductRepository productRepository)
+    public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
     {
         _productRepository = productRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     [HttpGet]
@@ -68,6 +70,28 @@ public class ProductsController : ControllerBase
     {
         await _productRepository.DeleteAsync(Guid.Parse(id));
         await _productRepository.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Upload()
+    {
+        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resource/product-images");
+
+        if (!Directory.Exists(uploadPath))
+            Directory.CreateDirectory(uploadPath);
+        
+        Random random = new();
+
+        foreach (IFormFile file in Request.Form.Files)
+        {
+            string fullPath = Path.Combine(uploadPath, $"{random.Next()}{Path.GetExtension(file.FileName)}");
+
+            using FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 1024*1024, useAsync: false);
+            
+            await file.CopyToAsync(fileStream);
+            await fileStream.FlushAsync();
+        }
         return Ok();
     }
 }

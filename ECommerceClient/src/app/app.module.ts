@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {AdminModule} from './admin/admin.module';
@@ -10,6 +9,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {HttpClientModule} from "@angular/common/http";
+import {MatButton} from '@angular/material/button';
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import {HttpClientModule} from "@angular/common/http";
       timeOut: 5000,
     }),
     NgxSpinnerModule,
-    HttpClientModule,
+    HttpClientModule, MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, MatDialogClose,
   ],
   providers: [
     {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
