@@ -16,5 +16,8 @@ public static class ServiceRegistration
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<IInvoiceFileRepository, InvoiceFileRepository>();
+        services.AddScoped<IProductImageFileRepository, ProductImageFileRepository>();
     }
 }

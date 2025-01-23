@@ -7,6 +7,7 @@ using ECommerceApi.Application.ViewModels.Products;
 using ECommerceApi.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using File = ECommerceApi.Domain.Entities.File;
 
 namespace ECommerceApi.API.Controllers;
 
@@ -17,12 +18,18 @@ public class ProductsController : ControllerBase
     private readonly IProductRepository _productRepository;
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IFileService _fileService;
-
-    public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment, IFileService fileService)
+    private readonly IFileRepository _fileRepository;
+    private readonly IProductImageFileRepository _productImageFileRepository;
+    private readonly IInvoiceFileRepository _invoiceFileRepository;
+    
+    public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment, IFileService fileService, IProductImageFileRepository productImageFileRepository, IFileRepository fileRepository, IInvoiceFileRepository invoiceFileRepository)
     {
         _productRepository = productRepository;
         _webHostEnvironment = webHostEnvironment;
         _fileService = fileService;
+        _productImageFileRepository = productImageFileRepository;
+        _fileRepository = fileRepository;
+        _invoiceFileRepository = invoiceFileRepository;
     }
 
     [HttpGet]
@@ -79,7 +86,35 @@ public class ProductsController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Upload()
     {
-        await _fileService.UploadFileAsync("resource/product-images", Request.Form.Files);
+        // var datas = await _fileService.UploadFileAsync("resource/product-images", Request.Form.Files);
+        // await _productImageFileRepository.BulkAdd(datas.Select(d => new ProductImageFile()
+        // {
+        //     FileName = d.fileName,
+        //     Path = d.path
+        // }).ToList());
+        // await _productImageFileRepository.SaveChangesAsync();
+        
+        // var datas = await _fileService.UploadFileAsync("resource/invoices", Request.Form.Files);
+        // await _invoiceFileRepository.BulkAdd(datas.Select(i => new InvoiceFile()
+        // {
+        //     FileName = i.fileName,
+        //     Path = i.path,
+        //     Price = new Random().Next(1000, 10000)
+        // }).ToList());
+        // await _invoiceFileRepository.SaveChangesAsync();
+        
+        var datas = await _fileService.UploadFileAsync("resource/files", Request.Form.Files);
+        await _fileRepository.BulkAdd(datas.Select(f => new File()
+        {
+            FileName = f.fileName,
+            Path = f.path,
+        }).ToList());
+        await _fileRepository.SaveChangesAsync();
+
+        var files = await _fileRepository.GetAllAsync(); // file, productImage, invoice olmak üzere hepsini getirir. capacity: 32
+        var productImages = await _productImageFileRepository.GetAllAsync(); // sadece productImage'i getirir. capacity: 4
+        var invoices = await _invoiceFileRepository.GetAllAsync(); // sadece invoices'i getirir. capacity: 16
+        
         return Ok();
     }
 }

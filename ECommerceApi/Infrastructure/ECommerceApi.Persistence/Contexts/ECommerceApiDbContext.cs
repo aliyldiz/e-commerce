@@ -2,6 +2,7 @@ using System.Reflection.PortableExecutable;
 using ECommerceApi.Domain.Entities;
 using ECommerceApi.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
+using File = ECommerceApi.Domain.Entities.File;
 
 namespace ECommerceApi.Persistence.Contexts;
 
@@ -14,6 +15,11 @@ public class ECommerceApiDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<File> Files { get; set; } // TPH uygulamak için bu ve alttaki iki property'i, bunların entity'lerini yazmak yeterlidir (File base class).
+                                           // Sadece File tablosu oluşturulur ve alttaki iki class için tablo oluşturulmaz, bu class'lara eklenen prop'lar File tablosunda column olarak eklenir.
+                                           // Ayrıca 3'ü için repository oluşturulur.                                                                                                                                              
+    public DbSet<ProductImageFile> ProductImageFiles { get; set; }
+    public DbSet<InvoiceFile> InvoiceFiles { get; set; }
 
     public override int SaveChanges()
     {
