@@ -2,6 +2,7 @@ using System.Net;
 using Bogus;
 using ECommerceApi.Application.Repositories;
 using ECommerceApi.Application.RequestParameters;
+using ECommerceApi.Application.Services;
 using ECommerceApi.Application.ViewModels.Products;
 using ECommerceApi.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,13 @@ public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IFileService _fileService;
 
-    public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment)
+    public ProductsController(IProductRepository productRepository, IWebHostEnvironment webHostEnvironment, IFileService fileService)
     {
         _productRepository = productRepository;
         _webHostEnvironment = webHostEnvironment;
+        _fileService = fileService;
     }
 
     [HttpGet]
@@ -76,22 +79,7 @@ public class ProductsController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Upload()
     {
-        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "resource/product-images");
-
-        if (!Directory.Exists(uploadPath))
-            Directory.CreateDirectory(uploadPath);
-        
-        Random random = new();
-
-        foreach (IFormFile file in Request.Form.Files)
-        {
-            string fullPath = Path.Combine(uploadPath, $"{random.Next()}{Path.GetExtension(file.FileName)}");
-
-            using FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 1024*1024, useAsync: false);
-            
-            await file.CopyToAsync(fileStream);
-            await fileStream.FlushAsync();
-        }
+        await _fileService.UploadFileAsync("resource/product-images", Request.Form.Files);
         return Ok();
     }
 }
