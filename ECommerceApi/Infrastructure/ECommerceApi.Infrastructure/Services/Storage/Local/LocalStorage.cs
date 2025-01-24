@@ -1,10 +1,10 @@
-using ECommerceApi.Application.Abstractions.Local;
+using ECommerceApi.Application.Abstractions.Storage.Local;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace ECommerceApi.Infrastructure.Services.Storage.Local;
 
-public class LocalStorage : ILocalStorage
+public class LocalStorage : Storage, ILocalStorage
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
         
@@ -23,8 +23,10 @@ public class LocalStorage : ILocalStorage
 
         foreach (IFormFile file in files)
         {
-            await CopyFileAsync($"{uploadPath}/{file.Name}", file);
-            datas.Add((file.Name, $"{path}/{file.Name}"));
+            string fileNewName = await RenameFileAsync(uploadPath, file.Name, HasFile);
+            
+            await CopyFileAsync($"{uploadPath}/{fileNewName}", file);
+            datas.Add((fileNewName, $"{path}/{fileNewName}"));
         }
         
         // TODO: yukarıdaki if geçerli değilse burada dosyaların sunucuda yüklenirken hata alındığına dair uyarıcı bir exception oluşturup firlatılması gerekiyor. 

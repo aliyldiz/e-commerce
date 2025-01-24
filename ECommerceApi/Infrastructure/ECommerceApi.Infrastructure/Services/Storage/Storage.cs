@@ -1,10 +1,11 @@
 using ECommerceApi.Infrastructure.Operations;
 
-namespace ECommerceApi.Infrastructure.Services;
+namespace ECommerceApi.Infrastructure.Services.Storage;
 
-public class FileService
+public class Storage
 {
-    async Task<string> RenameFileAsync(string path, string fileName, bool first = true)
+    protected delegate bool HasFile(string pathOrContainerName, string fileName);
+    protected async Task<string> RenameFileAsync(string pathOrContainerName, string fileName, HasFile hasFileMethod, bool first = true)
     {
         string newFileName = await Task.Run<string>(async () =>
         {
@@ -47,8 +48,8 @@ public class FileService
                         newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
                 }
             }
-            if (File.Exists($"{path}/{newFileName}"))
-                return await RenameFileAsync(path, newFileName, false);
+            if (hasFileMethod(pathOrContainerName, newFileName))
+                return await RenameFileAsync(pathOrContainerName, newFileName, hasFileMethod, false);
             else
                 return newFileName;
         });

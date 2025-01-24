@@ -31,16 +31,16 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery]Pagination pagination)
+    public Task<IActionResult> Get([FromQuery]Pagination pagination)
     {
         var totalCount = _productRepository.Get(null, true, null).Count();
         var products = _productRepository.Get(null, true, null).Skip((pagination.Page) * pagination.Size).Take(pagination.Size).ToList();
         
-        return Ok(new
+        return Task.FromResult<IActionResult>(Ok(new
         {
             totalCount,
             products
-        });
+        }));
     }
     
     [HttpGet("{id}")]
@@ -113,7 +113,7 @@ public class ProductsController : ControllerBase
         var productImages = await _productImageFileRepository.GetAllAsync(); // sadece productImage'i getirir. capacity: 4
         var invoices = await _invoiceFileRepository.GetAllAsync(); // sadece invoices'i getirir. capacity: 16
         
-        var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files);
+        var datas = await _storageService.UploadAsync("files", Request.Form.Files);
         await _productImageFileRepository.BulkAdd(datas.Select(d => new ProductImageFile()
         {
             FileName = d.fileName,

@@ -1,6 +1,4 @@
-using ECommerceApi.Application.Abstractions.Storage;
-
-namespace ECommerceApi.Application.Abstractions.Local;
+namespace ECommerceApi.Application.Abstractions.Storage.Local;
 
 public interface ILocalStorage : IStorage
 {
