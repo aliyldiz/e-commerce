@@ -10,4 +10,9 @@
       <ProjectReference Include="..\..\Core\ECommerceApi.Application\ECommerceApi.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Services\Storage\AWS\" />
+      <Folder Include="Services\Storage\Azure\" />
+    </ItemGroup>
+
 </Project>

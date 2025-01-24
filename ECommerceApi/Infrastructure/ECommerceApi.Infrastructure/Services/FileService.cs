@@ -1,44 +1,9 @@
-using ECommerceApi.Application.Services;
 using ECommerceApi.Infrastructure.Operations;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 namespace ECommerceApi.Infrastructure.Services;
 
-public class FileService : IFileService
+public class FileService
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
-        
-    public FileService(IWebHostEnvironment webHostEnvironment)
-    {
-        _webHostEnvironment = webHostEnvironment;
-    }
-    
-    public async Task<List<(string fileName, string path)>> UploadFileAsync(string path, IFormFileCollection files)
-    {
-        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
-        List<bool> results = new();
-        List<(string filename, string path)> datas = new();
-        
-        if (!Directory.Exists(uploadPath))
-            Directory.CreateDirectory(uploadPath);
-
-        foreach (IFormFile file in files)
-        {
-            string fileNewName = await RenameFileAsync(uploadPath, file.FileName);
-            
-            bool result = await CopyFileAsync($"{uploadPath}/{fileNewName}", file);
-            datas.Add((fileNewName, $"{path}/{fileNewName}"));
-            results.Add(result);
-        }
-
-        if (results.TrueForAll(r => r.Equals(true)))
-            return datas;
-        
-        // TODO: yukarıdaki if geçerli değilse burada dosyaların sunucuda yüklenirken hata alındığına dair uyarıcı bir exception oluşturup firlatılması gerekiyor. 
-        return null;
-    }
-
     async Task<string> RenameFileAsync(string path, string fileName, bool first = true)
     {
         string newFileName = await Task.Run<string>(async () =>
@@ -88,23 +53,5 @@ public class FileService : IFileService
                 return newFileName;
         });
         return newFileName;
-    }
-
-    public async Task<bool> CopyFileAsync(string path, IFormFile file)
-    {
-        try
-        {
-            await using FileStream fileStream = new(path, FileMode.Create, FileAccess.Write, FileShare.None, 1024*1024, false);
-        
-            await file.CopyToAsync(fileStream);
-            await fileStream.FlushAsync();
-            return true;
-        }
-        catch (Exception e)
-        {
-            // TODO: log
-            Console.WriteLine(e);
-            throw e;
-        }
     }
 }
