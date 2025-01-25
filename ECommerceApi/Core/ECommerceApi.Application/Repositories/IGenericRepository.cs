@@ -1,10 +1,13 @@
 using System.Linq.Expressions;
 using ECommerceApi.Domain.Entities.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApi.Application.Repositories;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
+    DbSet<T> dbSet { get; }
+    
     Task<int> AddAsync(T entity);
     int Add(T entity);
     int Add(IEnumerable<T> entities);

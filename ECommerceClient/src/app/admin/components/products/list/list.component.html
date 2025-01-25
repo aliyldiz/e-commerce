@@ -26,10 +26,17 @@
       <td mat-cell *matCellDef="let element"> {{element.modifiedDate}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="photos">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let element">
+        <img style="cursor: pointer" (click)="addProductImages(element.id)" src="../../../../../assets/icons/photo.png" alt="Delete Icon" width="24" height="24">
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let element">
-        <img src="../../../../../assets/icons/edit.png" alt="Delete Icon" width="24" height="24">
+        <img style="cursor: pointer" src="../../../../../assets/icons/edit.png" alt="Delete Icon" width="24" height="24">
       </td>
     </ng-container>
 

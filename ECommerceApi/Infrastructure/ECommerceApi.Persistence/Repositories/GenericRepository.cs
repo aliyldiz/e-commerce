@@ -1,20 +1,21 @@
 using System.Linq.Expressions;
 using ECommerceApi.Application.Repositories;
 using ECommerceApi.Domain.Entities.Common;
+using ECommerceApi.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApi.Persistence.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
-    private readonly DbContext _context;
-    protected DbSet<T> dbSet => _context.Set<T>();
+    private readonly ECommerceApiDbContext _context;
+    public DbSet<T> dbSet => _context.Set<T>();
     
-    public GenericRepository(DbContext context)
+    public GenericRepository(ECommerceApiDbContext context)
     {
         _context = context;
     }
-    
+
     public virtual async Task<int> AddAsync(T entity)
     {
         await dbSet.AddAsync(entity);
