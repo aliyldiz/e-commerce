@@ -1,5 +1,4 @@
 using ECommerceApi.Application.Abstractions.Storage;
-using ECommerceApi.Infrastructure.Services;
 using ECommerceApi.Infrastructure.Services.Storage;
 using Microsoft.Extensions.DependencyInjection;
 

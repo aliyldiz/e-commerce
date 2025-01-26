@@ -33,7 +33,7 @@ public class LocalStorage : Storage, ILocalStorage
         return datas;
     }
     
-    async Task<bool> CopyFileAsync(string path, IFormFile file)
+    async Task CopyFileAsync(string path, IFormFile file)
     {
         try
         {
@@ -41,18 +41,20 @@ public class LocalStorage : Storage, ILocalStorage
         
             await file.CopyToAsync(fileStream);
             await fileStream.FlushAsync();
-            return true;
         }
         catch (Exception e)
         {
             // TODO: log
             Console.WriteLine(e);
-            throw e;
+            throw;
         }
     }
 
-    public async Task DeleteAsync(string path, string fileName) 
-        => File.Delete($"{path}/{fileName}");
+    public Task DeleteAsync(string path, string fileName)
+    {
+        File.Delete($"{path}/{fileName}");
+        return Task.CompletedTask;
+    }
 
     public List<string> GetFiles(string path)
     {
@@ -60,6 +62,6 @@ public class LocalStorage : Storage, ILocalStorage
         return dir.GetFiles().Select(f => f.Name).ToList();
     }
 
-    public bool HasFile(string path, string fileName)
+    public new bool HasFile(string path, string fileName)
         => File.Exists($"{path}/{fileName}");
 }

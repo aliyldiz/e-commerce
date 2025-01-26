@@ -10,8 +10,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     
     Task<int> AddAsync(T entity);
     int Add(T entity);
-    int Add(IEnumerable<T> entities);
-    Task<int> AddAsync(IEnumerable<T> entities);
+    int Add(IEnumerable<T>? entities);
+    Task<int> AddAsync(IEnumerable<T>? entities);
     
     Task<int> UpdateAsync(T entity);
     int Update(T entity);
@@ -28,17 +28,17 @@ public interface IGenericRepository<T> where T : BaseEntity
     IQueryable<T> AsQueryable();
     Task<List<T>> GetAllAsync(bool noTracking = true);
     
-    Task<List<T>> GetList(Expression<Func<T, bool>> predicate, bool noTracking = true, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes);
-    Task<T> GetByIdAsync(Guid id, bool noTracking = true, params Expression<Func<T, object>>[] includes);
-    Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes);
-    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes);
-    IQueryable<T> Get(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes);
+    Task<List<T>> GetList(Expression<Func<T, bool>> predicate, bool noTracking = true, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, params Expression<Func<T, object>>[] includes);
+    Task<T> GetByIdAsync(string? id, bool noTracking = true, params Expression<Func<T, object>>[] includes);
+    Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes);
+    Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>>? predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes);
+    IQueryable<T> Get(Expression<Func<T, bool>>? predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes);
     
     Task BulkDeleteById(IEnumerable<Guid> ids);
     Task BulkDelete(Expression<Func<T, bool>> predicate);
     Task BulkDelete(IEnumerable<T> entities);
     Task BulkUpdate(IEnumerable<T> entities);
-    Task BulkAdd(IEnumerable<T> entities);
+    Task BulkAdd(IEnumerable<T>? entities);
     
     Task<int> SaveChangesAsync();
     int SaveChanges();

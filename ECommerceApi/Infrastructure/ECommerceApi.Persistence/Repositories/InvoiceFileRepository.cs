@@ -1,7 +1,6 @@
 using ECommerceApi.Application.Repositories;
 using ECommerceApi.Domain.Entities;
 using ECommerceApi.Persistence.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceApi.Persistence.Repositories;
 

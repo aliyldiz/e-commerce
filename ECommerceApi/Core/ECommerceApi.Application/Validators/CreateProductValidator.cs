@@ -1,9 +1,9 @@
-using ECommerceApi.Application.ViewModels.Products;
+using ECommerceApi.Application.Features.Commands.Product.CreateProduct;
 using FluentValidation;
 
 namespace ECommerceApi.Application.Validators;
 
-public class CreateProductValidator : AbstractValidator<ProductCreateVM>
+public class CreateProductValidator : AbstractValidator<CreateProductCommandRequest>
 {
     public CreateProductValidator()
     {

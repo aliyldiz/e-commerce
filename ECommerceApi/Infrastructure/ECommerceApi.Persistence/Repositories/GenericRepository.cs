@@ -28,16 +28,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return _context.SaveChanges();
     }
 
-    public virtual int Add(IEnumerable<T> entities)
+    public virtual int Add(IEnumerable<T>? entities)
     {
         if (entities != null && !entities.Any())
             return 0;
-        
-        dbSet.AddRange(entities);
+
+        if (entities != null) dbSet.AddRange(entities);
         return _context.SaveChanges();
     }
 
-    public virtual async Task<int> AddAsync(IEnumerable<T> entities)
+    public virtual async Task<int> AddAsync(IEnumerable<T>? entities)
     {
         if (entities != null && !entities.Any())
             return 0;
@@ -129,7 +129,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await dbSet.ToListAsync();
     }
 
-    public virtual async Task<List<T>> GetList(Expression<Func<T, bool>> predicate, bool noTracking = true, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, params Expression<Func<T, object>>[] includes)
+    public virtual async Task<List<T>> GetList(Expression<Func<T, bool>> predicate, bool noTracking = true, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, params Expression<Func<T, object>>[] includes)
     {
         IQueryable<T> query = dbSet;
 
@@ -148,9 +148,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await query.ToListAsync();
     }
 
-    public virtual async Task<T> GetByIdAsync(Guid id, bool noTracking = true, params Expression<Func<T, object>>[] includes)
+    public virtual async Task<T> GetByIdAsync(string? id, bool noTracking = true, params Expression<Func<T, object>>[] includes)
     {
-        T found = await dbSet.FindAsync(id);
+        T? found = await dbSet.FirstOrDefaultAsync(x => x.Id == Guid.Parse(id));
         
         if (found == null)
             return null;
@@ -164,7 +164,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return found;
     }
 
-    public virtual async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes)
+    public virtual async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes)
     {
         IQueryable<T> query = dbSet;
         
@@ -179,12 +179,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await query.SingleOrDefaultAsync();
     }
 
-    public virtual Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes)
+    public virtual Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>>? predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes)
     {
         return Get(predicate, noTracking, includes).FirstOrDefaultAsync();
     }
 
-    public virtual IQueryable<T> Get(Expression<Func<T, bool>> predicate, bool noTracking = true, params Expression<Func<T, object>>[] includes)
+    public virtual IQueryable<T> Get(Expression<Func<T, bool>>? predicate, bool noTracking = true, params Expression<Func<T, object>>[]? includes)
     {
         var query = dbSet.AsQueryable();
 
@@ -236,7 +236,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return _context.SaveChangesAsync();
     }
 
-    public virtual async Task BulkAdd(IEnumerable<T> entities)
+    public virtual async Task BulkAdd(IEnumerable<T>? entities)
     {
         if (entities != null && !entities.Any())
             await Task.CompletedTask;
@@ -255,7 +255,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return _context.SaveChanges();
     }
     
-    private static IQueryable<T> ApplyIncludes(IQueryable<T> query, params Expression<Func<T, object>>[] includes)
+    private static IQueryable<T> ApplyIncludes(IQueryable<T> query, params Expression<Func<T, object>>[]? includes)
     {
         if (includes != null)
         {

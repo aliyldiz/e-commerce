@@ -1,13 +1,15 @@
+using ECommerceApi.Application;
 using ECommerceApi.Application.Validators;
 using ECommerceApi.Infrastructure;
 using ECommerceApi.Infrastructure.Filters;
 using ECommerceApi.Infrastructure.Services.Storage.Azure;
-using ECommerceApi.Infrastructure.Services.Storage.Local;
 using ECommerceApi.Persistence;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
 
@@ -18,9 +20,16 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod()
 ));
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
-    .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
-    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+builder.Services.AddControllers(options => 
+        options.Filters.Add<ValidationFilter>())
+    .ConfigureApiBehaviorOptions(options => 
+        options.SuppressModelStateInvalidFilter = true);
+
+builder.Services
+    .AddValidatorsFromAssemblyContaining<CreateProductValidator>()
+    .AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

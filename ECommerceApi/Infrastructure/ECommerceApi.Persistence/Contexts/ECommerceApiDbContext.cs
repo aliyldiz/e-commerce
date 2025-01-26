@@ -1,4 +1,3 @@
-using System.Reflection.PortableExecutable;
 using ECommerceApi.Domain.Entities;
 using ECommerceApi.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;

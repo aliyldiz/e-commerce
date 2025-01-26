@@ -13,7 +13,7 @@ namespace ECommerceApi.Persistence.Migrations
 {
     [DbContext(typeof(ECommerceApiDbContext))]
     [Migration("20250124082917_storage")]
-    partial class storage
+    public partial class storage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

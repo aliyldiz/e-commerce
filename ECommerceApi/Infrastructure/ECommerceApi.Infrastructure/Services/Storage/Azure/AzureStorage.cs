@@ -9,7 +9,7 @@ namespace ECommerceApi.Infrastructure.Services.Storage.Azure;
 public class AzureStorage : Storage, IAzureStorage
 {
     private readonly BlobServiceClient _blobServiceClient; // used to connect to azure storage account
-    BlobContainerClient _blobContainerClient; // file operations on the target container in the account
+    BlobContainerClient _blobContainerClient = null!; // file operations on the target container in the account
     // alseo enable the “Blob anonymous access” setting in azure
     
     public AzureStorage(IConfiguration configuration)
@@ -48,7 +48,7 @@ public class AzureStorage : Storage, IAzureStorage
         return _blobContainerClient.GetBlobs().Select(blob => blob.Name).ToList();
     }
 
-    public bool HasFile(string containerName, string fileName)
+    public new bool HasFile(string containerName, string fileName)
     {
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
         return _blobContainerClient.GetBlobs().Any(blob => blob.Name == fileName);
