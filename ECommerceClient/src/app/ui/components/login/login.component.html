@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+      <div class="form-group">
+        <label for="userNameEmail">User Name or Email</label>
+        <input #txtUserNameOrEmail type="text" class="form-control" id="userNameEmail" placeholder="User Name or Email">
+        <small class="form-text text-muted invalid-feedback">Please enter your user name or Email.</small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input #txtPassword type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+      <button style="margin-top: 3px" type="submit" class="btn btn-primary" (click)="login(txtUserNameOrEmail.value, txtPassword.value)">Login</button>
+  </div>
+  <div class="col-md-4"></div>
+</div>
