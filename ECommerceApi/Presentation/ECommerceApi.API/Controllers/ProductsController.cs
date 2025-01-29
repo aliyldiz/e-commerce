@@ -8,12 +8,14 @@ using ECommerceApi.Application.Features.Queries.Product.GetAllProduct;
 using ECommerceApi.Application.Features.Queries.Product.GetByIdProduct;
 using ECommerceApi.Application.Features.Queries.ProductImageFile.GetProductImages;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceApi.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = "Admin")] // default olarak tanımlama yapsaydık bildirmemize gerek kalmayacaktı
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -1,3 +1,5 @@
+using ECommerceApi.Application.Abstractions.Token;
+using ECommerceApi.Application.DTOs;
 using ECommerceApi.Application.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -8,11 +10,16 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
 {
     private readonly UserManager<Domain.Entities.Identity.AppUser?> _userManager;
     private readonly SignInManager<Domain.Entities.Identity.AppUser> _signInManager;
+    private readonly ITokenHandler _tokenHandler; 
 
-    public LoginUserCommandHandler(UserManager<Domain.Entities.Identity.AppUser?> userManager, SignInManager<Domain.Entities.Identity.AppUser> signInManager)
+    public LoginUserCommandHandler(
+        UserManager<Domain.Entities.Identity.AppUser?> userManager, 
+        SignInManager<Domain.Entities.Identity.AppUser> signInManager, 
+        ITokenHandler tokenHandler)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _tokenHandler = tokenHandler;
     }
 
     public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)
@@ -28,9 +35,19 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommandRequest, 
 
         if (result.Succeeded)
         {
-            // Burada yetkileri belirle...
+            Token token = _tokenHandler.CreateAccessToken(5);
+            
+            return new LoginUserSuccessCommandResponse()
+            {
+                Token = token
+            };
         }
+
+        // return new LoginUserErrorCommandResponse()
+        // {
+        //     Message = "Login failed"
+        // };
         
-        return new();
+        throw new AuthenticationErrorException();
     }
 }
