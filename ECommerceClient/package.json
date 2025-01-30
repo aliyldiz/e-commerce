@@ -23,6 +23,7 @@
     "@angular/platform-server": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.10",
+    "@auth0/angular-jwt": "^5.2.0",
     "@schematics/angular": "^19.1.2",
     "alertifyjs": "^1.14.0",
     "bootstrap": "^5.3.3",

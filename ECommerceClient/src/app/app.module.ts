@@ -11,6 +11,7 @@ import {NgxSpinnerModule} from 'ngx-spinner';
 import {HttpClientModule} from "@angular/common/http";
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {JwtModule} from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,12 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
     }),
     NgxSpinnerModule,
     HttpClientModule, MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, MatDialogClose,
+    JwtModule.forRoot({
+        config: {
+            tokenGetter: () => localStorage.getItem("token"),
+            allowedDomains: ["localhost:7092"],
+        }
+    })
   ],
   providers: [
     {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
