@@ -29,12 +29,12 @@ export class UserService {
 
     const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
     if (tokenResponse) {
-      console.log(tokenResponse);
-      console.log(tokenResponse.token.accessToken);
-      console.log(tokenResponse.token.expiration);
+      // console.log(tokenResponse);
+      // console.log(tokenResponse.token.accessToken);
+      // console.log(tokenResponse.token.expiration);
 
       localStorage.setItem('token', tokenResponse.token.accessToken);
-      localStorage.setItem('expiration', tokenResponse.token.expiration.toString());
+      // localStorage.setItem('expiration', tokenResponse.token.expiration.toString());
 
       this.toastrService.message('Login successful', 'success', {
         messageType: ToastrMessageType.Success,

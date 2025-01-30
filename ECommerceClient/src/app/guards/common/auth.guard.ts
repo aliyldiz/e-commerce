@@ -4,6 +4,7 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 import {CustomToastrService, ToastrMessageType, ToastrPosition} from '../../services/ui/custom-toastr.service';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Injectable} from '@angular/core';
+import {_isAuthenticated, AuthService} from '../../services/common/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,18 +17,18 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     this.spinner.show(SpinnerType.BallAtom);
-    const token: string = localStorage.getItem("token");
+    // const token: string = localStorage.getItem("token");
+    //
+    // ////const decodeToken = this.jwtHelper.decodeToken(token);
+    // ////const expirationDate: Date = this.jwtHelper.getTokenExpirationDate(token);
+    // let expired: boolean;
+    // try {
+    //  expired = this.jwtHelper.isTokenExpired(token);
+    // } catch {
+    //  expired = true;
+    // }
 
-    ////const decodeToken = this.jwtHelper.decodeToken(token);
-    ////const expirationDate: Date = this.jwtHelper.getTokenExpirationDate(token);
-    let expired: boolean;
-    try {
-     expired = this.jwtHelper.isTokenExpired(token);
-    } catch {
-     expired = true;
-    }
-
-    if (!token || expired) {
+    if (!_isAuthenticated) {
       this.router.navigate(["login"], { queryParams: { returnUrl: state.url } });
       this.toastrService.message("You must login to access this page", "Unauthorized", {
         messageType: ToastrMessageType.Warning,
