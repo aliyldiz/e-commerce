@@ -12,10 +12,18 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {JwtModule} from '@auth0/angular-jwt';
+import {LoginComponent} from './ui/components/login/login.component';
+import {
+  GoogleLoginProvider,
+  GoogleSigninButtonModule,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -28,16 +36,30 @@ import {JwtModule} from '@auth0/angular-jwt';
     NgxSpinnerModule,
     HttpClientModule, MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, MatDialogClose,
     JwtModule.forRoot({
-        config: {
-            tokenGetter: () => localStorage.getItem("token"),
-            allowedDomains: ["localhost:7092"],
-        }
-    })
+      config: {
+        tokenGetter: () => localStorage.getItem("token"),
+        allowedDomains: ["localhost:7092"],
+      }
+    }),
+    SocialLoginModule, GoogleSigninButtonModule
   ],
   providers: [
     {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    {
+      provide: "SocialAuthServiceConfig",
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider("client_id")
+          }
+        ],
+        onError: err => console.log(err)
+      } as SocialAuthServiceConfig
+    }
   ],
   bootstrap: [AppComponent]
 })
