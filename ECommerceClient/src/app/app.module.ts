@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {NgxSpinnerModule} from 'ngx-spinner';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {JwtModule} from '@auth0/angular-jwt';
@@ -20,6 +20,7 @@ import {
   SocialAuthServiceConfig,
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
+import {HttpErrorHandlerInterceptorService} from './services/common/http-error-handler-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import {
         ],
         onError: err => console.log(err)
       } as SocialAuthServiceConfig
-    }
+    },
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorHandlerInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]
 })
