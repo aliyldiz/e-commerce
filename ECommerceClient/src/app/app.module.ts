@@ -14,6 +14,7 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
 import {JwtModule} from '@auth0/angular-jwt';
 import {LoginComponent} from './ui/components/login/login.component';
 import {
+  FacebookLoginProvider,
   GoogleLoginProvider,
   GoogleSigninButtonModule,
   SocialAuthServiceConfig,
@@ -54,7 +55,11 @@ import {
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider("client_id")
+            provider: new GoogleLoginProvider("212031309505-7ho2ffg6236piivm1gf0brhvjub70pp2.apps.googleusercontent.com")
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider("1361031141929454")
           }
         ],
         onError: err => console.log(err)
