@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using ECommerceApi.API.Configurations.ColumnWriters;
+using ECommerceApi.API.Extensions;
 using ECommerceApi.Application;
 using ECommerceApi.Application.Validators;
 using ECommerceApi.Infrastructure;
@@ -16,6 +17,7 @@ using Serilog;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Sinks.PostgreSQL;
+using ILogger = Google.Apis.Logging.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +100,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.ConfigureExceptionHandler(app.Services.GetRequiredService<ILogger<Program>>());
 
 app.UseStaticFiles();
 
