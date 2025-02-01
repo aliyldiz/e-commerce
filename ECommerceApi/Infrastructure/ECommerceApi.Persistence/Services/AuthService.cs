@@ -59,7 +59,7 @@ public class AuthService : IAuthService
         if (user is not null && user?.RefreshTokenEndDate > DateTime.UtcNow)
         {
             Token token = _tokenHandler.CreateAccessToken(15, user);
-            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 300);
             return token;
         }
         throw new NotFoundUserException();

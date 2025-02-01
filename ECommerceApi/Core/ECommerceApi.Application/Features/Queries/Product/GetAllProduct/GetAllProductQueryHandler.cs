@@ -18,7 +18,6 @@ public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQueryReque
     public Task<GetAllProductQueryResponse> Handle(GetAllProductQueryRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("get all products :)");
-        throw new Exception("error.....");
         var totalCount = _productRepository.Get(null, true, null).Count();
         var products = _productRepository.Get(null, true, null)
             .Skip((request.Page) * request.Size).Take(request.Size).Select(p => new
