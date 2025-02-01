@@ -25,12 +25,27 @@ export class UserAuthService {
       // console.log(tokenResponse.token.expiration);
 
       localStorage.setItem('token', tokenResponse.token.accessToken);
+      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
       // localStorage.setItem('expiration', tokenResponse.token.expiration.toString());
 
       this.toastrService.message('Login successful', 'success', {
         messageType: ToastrMessageType.Success,
         position: ToastrPosition.TopRight
       });
+    }
+    callBackFunction();
+  }
+
+  async refreshTokenLogin(refreshToken: string, callBackFunction?: () => void): Promise<any> {
+    const observable: Observable<any | TokenResponse> = this.httpClientService.post({
+      action: 'refreshtokenlogin',
+      controller: 'auth'
+    }, {refreshToken: refreshToken});
+
+    const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
+    if (tokenResponse) {
+      localStorage.setItem('token', tokenResponse.token.accessToken);
+      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
     }
     callBackFunction();
   }
@@ -44,6 +59,7 @@ export class UserAuthService {
     const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
     if (tokenResponse) {
       localStorage.setItem('token', tokenResponse.token.accessToken);
+      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
       this.toastrService.message('Google Login successful', 'success', {
         messageType: ToastrMessageType.Success,
         position: ToastrPosition.TopRight
@@ -61,6 +77,7 @@ export class UserAuthService {
     const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
     if (tokenResponse) {
       localStorage.setItem('token', tokenResponse.token.accessToken);
+      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
       this.toastrService.message('Facebook Login successful', 'success', {
         messageType: ToastrMessageType.Success,
         position: ToastrPosition.TopRight

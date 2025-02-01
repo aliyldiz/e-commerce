@@ -4,10 +4,10 @@ using ECommerceApi.Application.Abstractions.Token;
 using ECommerceApi.Application.DTOs;
 using ECommerceApi.Application.DTOs.Facebook;
 using ECommerceApi.Application.Exceptions;
-using ECommerceApi.Application.Features.Commands.AppUser.LoginUser;
 using ECommerceApi.Domain.Entities.Identity;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace ECommerceApi.Persistence.Services;
@@ -19,14 +19,16 @@ public class AuthService : IAuthService
     private readonly ITokenHandler _tokenHandler; 
     private readonly IConfiguration _configuration;
     private readonly SignInManager<AppUser> _signInManager;
+    private readonly IUserService _userService;
 
-    public AuthService(IConfiguration configuration, IHttpClientFactory httpClientFactory, UserManager<AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager)
+    public AuthService(IConfiguration configuration, IHttpClientFactory httpClientFactory, UserManager<AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService)
     {
         _httpClient = httpClientFactory.CreateClient();
         _configuration = configuration;
         _userManager = userManager;
         _tokenHandler = tokenHandler;
         _signInManager = signInManager;
+        _userService = userService;
     }
 
     public async Task<Token> LoginAsync(string userNameOrEmail, string password, int accessTokenLifeTime)
@@ -43,11 +45,24 @@ public class AuthService : IAuthService
         if (result.Succeeded)
         {
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
-            
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
             return token;
         }
         
         throw new AuthenticationErrorException();
+    }
+
+    public async Task<Token> RefreshTokenLoginAsync(string refreshToken)
+    {
+        AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+        if (user is not null && user?.RefreshTokenEndDate > DateTime.UtcNow)
+        {
+            Token token = _tokenHandler.CreateAccessToken(15);
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
+            return token;
+        }
+        throw new NotFoundUserException();
     }
 
     public async Task<Token> GoogleLoginAsync(string idToken, string provider, int accessTokenLifeTime)
@@ -115,6 +130,7 @@ public class AuthService : IAuthService
         {
             await _userManager.AddLoginAsync(user, info); // add to AspNetUserLogins table
             Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime);
+            await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 10);
             return token;
         }
         
