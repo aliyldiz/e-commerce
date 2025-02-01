@@ -1,7 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using ECommerceApi.Application.Abstractions.Token;
+using ECommerceApi.Domain.Entities.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,7 +18,7 @@ public class TokenHandler : ITokenHandler
         _configuration = configuration;
     }
 
-    public Application.DTOs.Token CreateAccessToken(int second)
+    public Application.DTOs.Token CreateAccessToken(int second, AppUser user)
     {
         Application.DTOs.Token token = new();
         
@@ -30,7 +32,8 @@ public class TokenHandler : ITokenHandler
             audience: _configuration["Token:Audience"],
             expires: token.Expiration,
             notBefore: DateTime.UtcNow,
-            signingCredentials: signingCredentials
+            signingCredentials: signingCredentials,
+            claims: new List<Claim> { new(ClaimTypes.Name, user.UserName)}
         );
         
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
