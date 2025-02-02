@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {NgxSpinnerModule} from 'ngx-spinner';
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {JwtModule} from '@auth0/angular-jwt';
@@ -21,6 +21,13 @@ import {
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
 import {HttpErrorHandlerInterceptorService} from './services/common/http-error-handler-interceptor.service';
+
+export function tokenGetter() {
+  if (typeof localStorage !== 'undefined') {
+    return localStorage.getItem('access_token');
+  }
+  return null;
+}
 
 @NgModule({
   declarations: [
@@ -39,7 +46,7 @@ import {HttpErrorHandlerInterceptorService} from './services/common/http-error-h
     HttpClientModule, MatButton, MatDialogActions, MatDialogContent, MatDialogTitle, MatDialogClose,
     JwtModule.forRoot({
       config: {
-        tokenGetter: () => localStorage.getItem("token"),
+        tokenGetter: tokenGetter,
         allowedDomains: ["localhost:7092"],
       }
     }),
@@ -47,6 +54,7 @@ import {HttpErrorHandlerInterceptorService} from './services/common/http-error-h
   ],
   providers: [
     {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
+    [provideHttpClient(withFetch())],
     provideClientHydration(),
     provideAnimationsAsync(),
     {

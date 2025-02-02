@@ -39,10 +39,6 @@ export class HttpErrorHandlerInterceptorService implements HttpInterceptor{
           });
           break;
         default:
-          this.toastrService.message('An error occurred', 'error', {
-            messageType: ToastrMessageType.Error,
-            position: ToastrPosition.TopRight
-          });
           break;
       }
     return of(error);

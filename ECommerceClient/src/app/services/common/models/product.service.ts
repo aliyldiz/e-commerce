@@ -3,7 +3,7 @@ import {Create_Product} from '../../../contracts/create-product';
 import {HttpClientService} from '../http-client.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {List_Product} from '../../../contracts/list-product';
-import {first, firstValueFrom, Observable} from 'rxjs';
+import {first, firstValueFrom, lastValueFrom, Observable} from 'rxjs';
 import {List_Product_Image} from '../../../contracts/list-product-image';
 
 @Injectable({
@@ -30,17 +30,16 @@ export class ProductService {
     );
   }
 
-  async read(page: number = 0, size: number = 5, successCallback?: () => void, errorCallback?: (errorMessage: string) => void): Promise<{totalCount: number, products: List_Product[]}> {
-    const promiseData: Promise<{totalCount: number, products: List_Product[]}> = this.httpClientService.get<{totalCount: number, products: List_Product[]}>({
-      controller: 'products',
+  async read(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalProductCount: number; products: List_Product[] }> {
+    const promiseData: Promise<{ totalProductCount: number; products: List_Product[] }> = this.httpClientService.get<{ totalProductCount: number; products: List_Product[] }>({
+      controller: "products",
       queryString: `page=${page}&size=${size}`
     }).toPromise();
-
-    promiseData.then(d => successCallback())
-      .catch((errorResponse: HttpErrorResponse) => errorCallback(errorResponse.message));
-
+    promiseData.then(d => successCallBack())
+      .catch((errorResponse: HttpErrorResponse) => errorCallBack(errorResponse.message))
     return await promiseData;
   }
+
 
   async delete(id: string) {
     const deleteObservable: Observable<any> = this.httpClientService.delete<any>({
@@ -67,6 +66,16 @@ export class ProductService {
       queryString: `imageId=${imageId}`
     }, id)
     await firstValueFrom(deleteObservable);
+    successCallback();
+  }
+
+  async changeShowcaseImage(imageId: string, productId: string, successCallback?: () => void): Promise<void> {
+    const changeShowcaseImageObservable = this.httpClientService.get({
+      action: 'changeshowcaseimage',
+      controller: 'products',
+      queryString: `imageId=${imageId}&productId=${productId}`
+    });
+    await firstValueFrom(changeShowcaseImageObservable);
     successCallback();
   }
 }

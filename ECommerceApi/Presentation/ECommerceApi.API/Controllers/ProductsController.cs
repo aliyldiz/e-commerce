@@ -2,6 +2,7 @@ using System.Net;
 using ECommerceApi.Application.Features.Commands.Product.CreateProduct;
 using ECommerceApi.Application.Features.Commands.Product.RemoveProduct;
 using ECommerceApi.Application.Features.Commands.Product.UpdateProduct;
+using ECommerceApi.Application.Features.Commands.ProductImageFile.ChangeShowcaseImage;
 using ECommerceApi.Application.Features.Commands.ProductImageFile.RemoveProductImage;
 using ECommerceApi.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ECommerceApi.Application.Features.Queries.Product.GetAllProduct;
@@ -15,7 +16,6 @@ namespace ECommerceApi.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = "Admin")] // default olarak tanımlama yapsaydık bildirmemize gerek kalmayacaktı
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -38,8 +38,9 @@ public class ProductsController : ControllerBase
         var product = await _mediator.Send(requestModel);
         return Ok(product);
     }
-
+    
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public async Task<IActionResult> Post(CreateProductCommandRequest requestModel)
     {
         await _mediator.Send(requestModel);
@@ -47,6 +48,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public async Task<IActionResult> Put([FromBody] UpdateProductCommandRequest requestModel)
     {
         await _mediator.Send(requestModel);
@@ -54,6 +56,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{Id}")]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public async Task<IActionResult> Delete([FromRoute] RemoveProductCommandRequest requestModel)
     {
         var result = await _mediator.Send(requestModel);
@@ -61,6 +64,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("[action]")]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public async Task<IActionResult> Upload([FromQuery] UploadProductImageCommandRequest requestModel)
     {
         requestModel.Files = Request.Form.Files;
@@ -76,10 +80,18 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("[action]/{Id}")]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public async Task<IActionResult> DeleteProductImage([FromRoute] RemoveProductImageCommandRequest requestModel, [FromQuery] string imageId)
     {
         requestModel.ImageId = imageId;
         await _mediator.Send(requestModel);
         return Ok();
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> ChangeShowcaseImage([FromQuery] ChangeShowcaseImageCommandRequest requestModel)
+    {
+        ChangeShowcaseImageCommandResponse response = await _mediator.Send(requestModel);
+        return Ok(response);
     }
 }

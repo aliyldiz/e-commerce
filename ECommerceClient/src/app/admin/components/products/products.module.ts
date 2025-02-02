@@ -23,19 +23,22 @@ import {DialogModule} from '../../../dialogs/dialog.module';
     ListComponent,
     DeleteDirective
   ],
-    imports: [
-      CommonModule,
-      RouterModule.forChild([
-          {path: '', component: ProductsComponent}
-      ]),
-      MatSidenavModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule,
-      MatTableModule,
-      MatPaginatorModule,
-      DialogModule,
-      FileUploadModule
-    ]
+  exports: [
+    ListComponent
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild([
+      {path: '', component: ProductsComponent}
+    ]),
+    MatSidenavModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    DialogModule,
+    FileUploadModule
+  ]
 })
 export class ProductsModule { }
