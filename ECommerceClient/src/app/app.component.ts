@@ -13,14 +13,14 @@ declare var $: any
 })
 export class AppComponent {
   constructor(public authService: AuthService, private toastrService: CustomToastrService, private router: Router, private httpClientService: HttpClientService) {
-    httpClientService.put({
-      controller: "baskets"
-    }, {
-      basketItemId: "bf85f967-eb89-4242-aa3f-b1e0e384e597",
-      quantity: 17
-    }).subscribe(data =>{
-      debugger;
-    });
+    // httpClientService.put({
+    //   controller: "baskets"
+    // }, {
+    //   basketItemId: "bf85f967-eb89-4242-aa3f-b1e0e384e597",
+    //   quantity: 17
+    // }).subscribe(data =>{
+    //   debugger;
+    // });
 
     this.authService.identityCheck();
   }
