@@ -76,7 +76,7 @@ public class BasketService : IBasketService
         if (basket != null)
         {
             BasketItem _basketItem = await _basketItemRepository.GetSingleAsync(bi =>
-                bi.BasketId == basket.Id && bi.ProductId == Guid.Parse(basketItem.ProductId));
+                bi.BasketId == basket.Id && bi.ProductId == Guid.Parse(basketItem.ProductId), false);
             
             if(_basketItem != null)
                 _basketItem.Quantity++;

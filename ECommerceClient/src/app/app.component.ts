@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AuthService} from './services/common/auth.service';
 import {CustomToastrService, ToastrMessageType, ToastrPosition} from './services/ui/custom-toastr.service';
 import {Router} from '@angular/router';
-import {HttpClientService} from './services/common/http-client.service';
+import {ComponentType, DynamicLoadComponentService} from './services/common/dynamic-load-component.service';
+import {DynamicLoadComponentDirective} from './directives/common/dynamic-load-component.directive';
 
 declare var $: any
 
@@ -12,7 +13,10 @@ declare var $: any
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(public authService: AuthService, private toastrService: CustomToastrService, private router: Router, private httpClientService: HttpClientService) {
+  @ViewChild(DynamicLoadComponentDirective, {static: true})
+  dynamicLoadComponentDirective: DynamicLoadComponentDirective;
+
+  constructor(public authService: AuthService, private toastrService: CustomToastrService, private router: Router, private dynamicComponentService: DynamicLoadComponentService) {
     // httpClientService.put({
     //   controller: "baskets"
     // }, {
@@ -33,5 +37,9 @@ export class AppComponent {
       messageType: ToastrMessageType.Warning,
       position: ToastrPosition.TopRight
     });
+  }
+
+  loadComponent() {
+    this.dynamicComponentService.loadComponent(ComponentType .BasketsComponent, this.dynamicLoadComponentDirective.viewContainerRef);
   }
 }

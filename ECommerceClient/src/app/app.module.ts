@@ -21,6 +21,7 @@ import {
   SocialLoginModule
 } from '@abacritt/angularx-social-login';
 import {HttpErrorHandlerInterceptorService} from './services/common/http-error-handler-interceptor.service';
+import { DynamicLoadComponentDirective } from './directives/common/dynamic-load-component.directive';
 
 export function tokenGetter() {
   if (typeof localStorage !== 'undefined') {
@@ -32,7 +33,8 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    DynamicLoadComponentDirective
   ],
   imports: [
     BrowserModule,
