@@ -14,19 +14,14 @@ export class UserAuthService {
 
   async login(userNameOrEmail: string, password: string, callBackFunction?: () => void): Promise<any> {
     const observable: Observable<any | TokenResponse> = this.httpClientService.post<any | TokenResponse>({
-      controller: 'auth',
-      action: 'login'
+      controller: "auth",
+      action: "login"
     }, {userNameOrEmail, password});
 
     const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
     if (tokenResponse) {
-      // console.log(tokenResponse);
-      // console.log(tokenResponse.token.accessToken);
-      // console.log(tokenResponse.token.expiration);
-
-      localStorage.setItem('token', tokenResponse.token.accessToken);
-      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
-      // localStorage.setItem('expiration', tokenResponse.token.expiration.toString());
+      localStorage.setItem("token", tokenResponse.token.accessToken);
+      localStorage.setItem("refreshToken", tokenResponse.token.refreshToken);
 
       this.toastrService.message('Login successful', 'success', {
         messageType: ToastrMessageType.Success,
@@ -36,18 +31,21 @@ export class UserAuthService {
     callBackFunction();
   }
 
-  async refreshTokenLogin(refreshToken: string, callBackFunction?: () => void): Promise<any> {
+  async refreshTokenLogin(refreshToken: string, callBackFunction?: (state) => void): Promise<any> {
     const observable: Observable<any | TokenResponse> = this.httpClientService.post({
-      action: 'refreshtokenlogin',
-      controller: 'auth'
+      action: "refreshtokenlogin",
+      controller: "auth"
     }, {refreshToken: refreshToken});
-
-    const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
-    if (tokenResponse) {
-      localStorage.setItem('token', tokenResponse.token.accessToken);
-      localStorage.setItem('refreshToken', tokenResponse.token.refreshToken);
+    try {
+      const tokenResponse: TokenResponse = await firstValueFrom(observable) as TokenResponse;
+      if (tokenResponse) {
+        localStorage.setItem("token", tokenResponse.token.accessToken);
+        localStorage.setItem("refreshToken", tokenResponse.token.refreshToken);
+      }
+      callBackFunction(tokenResponse ? true : false);
+    } catch {
+      callBackFunction(false);
     }
-    callBackFunction();
   }
 
   async googleLogin(user: SocialUser, callBackFunction?: () => void): Promise<any> {

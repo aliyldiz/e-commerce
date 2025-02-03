@@ -1,4 +1,5 @@
 using System.Net;
+using Bogus;
 using ECommerceApi.Application.Features.Commands.Product.CreateProduct;
 using ECommerceApi.Application.Features.Commands.Product.RemoveProduct;
 using ECommerceApi.Application.Features.Commands.Product.UpdateProduct;
@@ -8,6 +9,8 @@ using ECommerceApi.Application.Features.Commands.ProductImageFile.UploadProductI
 using ECommerceApi.Application.Features.Queries.Product.GetAllProduct;
 using ECommerceApi.Application.Features.Queries.Product.GetByIdProduct;
 using ECommerceApi.Application.Features.Queries.ProductImageFile.GetProductImages;
+using ECommerceApi.Application.Repositories;
+using ECommerceApi.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +34,21 @@ public class ProductsController : ControllerBase
         GetAllProductQueryResponse allProducts = await _mediator.Send(requestModel);
         return Ok(allProducts);
     }
+
+    // [HttpGet("[action]")]
+    // public async Task<IActionResult> CreateDummyProduct()
+    // {
+    //     var dummy = new Faker<Product>()
+    //         .RuleFor(d => d.Name, f => f.Commerce.ProductName())
+    //         .RuleFor(d => d.Stock, f => f.Random.Int(1, 20))
+    //         .RuleFor(d => d.Price, f => f.Random.Int(5, 100))
+    //         .Generate(500);
+    //     
+    //     await _productRepository.AddAsync(dummy);
+    //     await _productRepository.SaveChangesAsync();
+    //     
+    //     return Ok(images);
+    // }
 
     [HttpGet("{Id}")]
     public async Task<IActionResult> Get([FromRoute] GetByIdProductQueryRequest requestModel)

@@ -23,6 +23,7 @@ using ILogger = Google.Apis.Logging.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpContextAccessor(); // client'tan gelen request neticesinde oluşturulan HttpContext nesnesine katmanlardaki class'lar üzerinden (business logic) erişebilmemizi sağlayan bir servistir.
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
@@ -81,7 +82,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer("Admin", option =>
 {
-    option.TokenValidationParameters = new TokenValidationParameters
+    option.TokenValidationParameters = new()
     {
         ValidateAudience = true,
         ValidateIssuer = true,
@@ -89,8 +90,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidAudience = builder.Configuration["Token:Audience"],
         ValidIssuer = builder.Configuration["Token:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]!)),
-        LifetimeValidator = (before, expires, token, parameters) => expires != null && expires > DateTime.UtcNow,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
+        LifetimeValidator = (notBefore, expires, securityToken, parameters) => expires != null ? expires > DateTime.UtcNow : false,
         
         NameClaimType = ClaimTypes.Name // JWT üzerinde Name claim'ine karşılık gelen değeri User.Identity.Name property'sinden elde edebiliriz.
     };

@@ -24,7 +24,7 @@ import {HttpErrorHandlerInterceptorService} from './services/common/http-error-h
 
 export function tokenGetter() {
   if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem('access_token');
+    return localStorage.getItem('token');
   }
   return null;
 }

@@ -1,3 +1,4 @@
+using ECommerceApi.Domain;
 using ECommerceApi.Domain.Entities;
 using ECommerceApi.Domain.Entities.Common;
 using ECommerceApi.Domain.Entities.Identity;
@@ -21,6 +22,21 @@ public class ECommerceApiDbContext : IdentityDbContext<AppUser, AppRole, string>
                                            // Ayrıca 3'ü için repository oluşturulur.                                                                                                                                              
     public DbSet<ProductImageFile> ProductImageFiles { get; set; }
     public DbSet<InvoiceFile> InvoiceFiles { get; set; }
+    public DbSet<Basket> Baskets { get; set; }
+    public DbSet<BasketItem> BasketItems { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Order>()
+            .HasKey(o => o.Id);
+
+        builder.Entity<Basket>()
+            .HasOne(o => o.Order)
+            .WithOne(b => b.Basket)
+            .HasForeignKey<Order>(o => o.Id);
+        
+        base.OnModelCreating(builder);
+    }
 
     public override int SaveChanges()
     {

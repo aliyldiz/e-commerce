@@ -8,20 +8,14 @@ export class AuthService {
   constructor(private jwtHelper: JwtHelperService) { }
 
   identityCheck() {
-    if(typeof window !== 'undefined' && window.localStorage) {
-      const token: string = localStorage.getItem("token");
-
-      //const decodeToken = this.jwtHelper.decodeToken(token);
-      //const expirationDate: Date = this.jwtHelper.getTokenExpirationDate(token);
-      let expired: boolean;
-      try {
-        expired = this.jwtHelper.isTokenExpired(token);
-      } catch {
-        expired = true;
-      }
-
-      _isAuthenticated = token != null && !expired;
+    const token: string = localStorage.getItem("token");
+    let expired: boolean;
+    try {
+      expired = this.jwtHelper.isTokenExpired(token);
+    } catch {
+      expired = true;
     }
+    _isAuthenticated = token != null && !expired;
   }
 
   get isAuthenticated(): boolean {

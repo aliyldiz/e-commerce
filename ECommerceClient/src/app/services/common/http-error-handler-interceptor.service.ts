@@ -39,6 +39,10 @@ export class HttpErrorHandlerInterceptorService implements HttpInterceptor{
           });
           break;
         default:
+          // this.toastrService.message('Unknown Error', 'error', {
+          //   messageType: ToastrMessageType.Error,
+          //   position: ToastrPosition.TopRight
+          // });
           break;
       }
     return of(error);
