@@ -30,6 +30,7 @@ public class OrderService : IOrderService
             TotalOrderCount = await query.CountAsync(),
             Orders = await data.Select(o => new
             {
+                Id = o.Id,
                 CreatedDate = o.CreatedDate,
                 OrderCode = o.OrderCode,
                 TotalPrice = o.Basket.BasketItems.Sum(bi => bi.Product.Price * bi.Quantity),
@@ -38,10 +39,33 @@ public class OrderService : IOrderService
         };
     }
 
+    public async Task<SingleOrder> GetByIdOrderAsync(string id)
+    {
+        var data = await _orderRepository.dbSet
+            .Include(o => o.Basket)
+                .ThenInclude(b => b.BasketItems)
+                    .ThenInclude(bi => bi.Product)
+                        .FirstOrDefaultAsync(o => o.Id == Guid.Parse(id));
+
+        return new()
+        {
+            Id = data.Id.ToString(),
+            BasketItems = data.Basket.BasketItems.Select(bi => new
+            {
+                bi.Product.Name,
+                bi.Product.Price,
+                bi.Quantity,
+            }),
+            Address = data.Address,
+            CreatedDate = data.CreatedDate,
+            Description = data.Description,
+            OrderCode = data.OrderCode,
+        };
+    }
+
     public async Task CreateOrderAsync(CreateOrder createOrder)
     {
-        string orderCode = (new Random().NextDouble() * 100000000).ToString();
-        orderCode = orderCode.Substring(orderCode.IndexOf(".") + 1, orderCode.Length - orderCode.IndexOf(".") - 1);
+        string orderCode = (new Random()).Next(10000, 99999).ToString();
         
         await _orderRepository.AddAsync(new Order()
         {
