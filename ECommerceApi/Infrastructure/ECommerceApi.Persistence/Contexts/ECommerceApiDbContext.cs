@@ -29,6 +29,10 @@ public class ECommerceApiDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         builder.Entity<Order>()
             .HasKey(o => o.Id);
+        
+        builder.Entity<Order>()
+            .HasIndex(o => o.OrderCode)
+            .IsUnique();
 
         builder.Entity<Basket>()
             .HasOne(o => o.Order)
