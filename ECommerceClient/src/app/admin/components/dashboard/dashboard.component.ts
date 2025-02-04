@@ -14,6 +14,7 @@ import {HubUrls} from '../../../constants/hub-urls';
 export class DashboardComponent extends BaseComponent implements OnInit {
   constructor(private alertify: AlertifyService, spinner: NgxSpinnerService, private signalrService: SignalrService) {
     super(spinner);
+    signalrService.start(HubUrls.OrderHub);
     signalrService.start(HubUrls.ProductHub);
   }
 
@@ -21,8 +22,14 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     this.signalrService.on(ReceiveFunctions.ProductAddedMessageReceiveFuntion, message => {
       this.alertify.message(message, {
         messageType: MessageType.Notify,
-        position: Position.TopRight
-      });
-    })
+        position: Position.TopCenter
+      })
+    });
+    this.signalrService.on(ReceiveFunctions.OrderAddedMessageReceiveFuntion, message => {
+      this.alertify.message(message, {
+        messageType: MessageType.Notify,
+        position: Position.TopCenter
+      })
+    });
   }
 }

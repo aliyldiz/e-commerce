@@ -111,4 +111,13 @@ public class BasketService : IBasketService
             await _basketItemRepository.SaveChangesAsync();
         }
     }
+
+    public Basket? GetUserActiveBasket
+    {
+        get
+        {
+            Basket? basket = ContextUser().Result;
+            return basket;
+        }
+    }
 }

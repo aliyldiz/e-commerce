@@ -10,6 +10,7 @@ public static class ServiceRegistration
     {
         services.AddSignalR();
         services.AddTransient<IProductHubService, ProductHubService>();
+        services.AddTransient<IOrderHubService, OrderHubService>();
     }
 
 }

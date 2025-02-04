@@ -56,6 +56,7 @@ export function tokenGetter() {
   ],
   providers: [
     {provide: "baseUrl", useValue: "https://localhost:7092/api", multi: true},
+    {provide: "baseSignalRUrl", useValue: "https://localhost:7092/", multi: true},
     [provideHttpClient(withFetch())],
     provideClientHydration(),
     provideAnimationsAsync(),
