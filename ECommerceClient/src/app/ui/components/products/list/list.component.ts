@@ -54,7 +54,7 @@ export class ListComponent extends BaseComponent implements OnInit{
           price: p.price,
           createdDate: p.createdDate,
           modifiedDate: p.modifiedDate,
-          imagePath: `${p.productImageFiles.length ? p.productImageFiles.find(p => p.showcase).path : ""}`,
+          imagePath: p.productImageFiles.length ? p.productImageFiles.find(p => p.showcase).path : "",
           productImageFiles: p.productImageFiles
         };
         return listProduct;
