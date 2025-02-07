@@ -4,4 +4,5 @@ public interface IMailService
 {
     Task SendEmailAsync(string to, string subject, string body, bool isBodyHtml = true);
     Task SendEmailAsync(string[] tos, string subject, string body, bool isBodyHtml = true);
+    Task SendPasswordResetEmailAsync(string to, string userId, string resetToken);
 }

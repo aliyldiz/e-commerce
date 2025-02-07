@@ -25,7 +25,8 @@ public static class ServiceRegistration
             opt.Password.RequireDigit = false;
             opt.Password.RequireUppercase = false;
             opt.Password.RequireLowercase = false;
-        }).AddEntityFrameworkStores<ECommerceApiDbContext>();
+        }).AddEntityFrameworkStores<ECommerceApiDbContext>()
+        .AddDefaultTokenProviders();
         
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();

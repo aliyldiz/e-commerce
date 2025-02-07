@@ -20,6 +20,8 @@ const routes: Routes = [
   { path: "products/:pageNo", loadChildren: () => import('./ui/components/products/products.module').then(m => m.ProductsModule) },
   { path: "register", loadChildren: () => import('./ui/components/register/register.module').then(m => m.RegisterModule) },
   { path: "login", loadChildren: () => import('./ui/components/login/login.module').then(m => m.LoginModule) },
+  { path: "password-reset", loadChildren: () => import('./ui/components/password-reset/password-reset.module').then(m => m.PasswordResetModule) },
+  { path: "update-password/:userId/:resetToken", loadChildren: () => import('./ui/components/update-password/update-password.module').then(m => m.UpdatePasswordModule) },
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using ECommerceApi.Application.Abstractions.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -35,5 +36,20 @@ public class MailService : IMailService
         smtp.EnableSsl = true;
         smtp.Host = _configuration["Mail:Host"];
         await smtp.SendMailAsync(mail);
+    }
+
+    public async Task SendPasswordResetEmailAsync(string to, string userId, string resetToken)
+    {
+        StringBuilder mail = new();
+        mail.AppendLine(
+            $"Hello, <br><br><br> If you are sure you want to reset your password. This link will reset your password. <br><strong><a target=\"_blank\" href=\"");
+        mail.AppendLine(_configuration["AngularClientUrl"]);
+        mail.AppendLine("/update-password/");
+        mail.AppendLine(userId);
+        mail.AppendLine("/");
+        mail.AppendLine(resetToken);
+        mail.AppendLine("\">Click here for new password request.</a></strong><br><br><span style=\"font-size: 12px;\">If you have not received this password reset request, don't take this e-mail seriously.</span><br><br>Best regards.<br><br><br>E-Commerce");
+        
+        await SendEmailAsync(to, "Password Reset Request", mail.ToString());
     }
 }

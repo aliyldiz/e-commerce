@@ -1,5 +1,6 @@
 using ECommerceApi.Application.Abstractions.Services;
 using ECommerceApi.Application.Features.Commands.AppUser.CreateUser;
+using ECommerceApi.Application.Features.Commands.AppUser.UpdatePassword;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +26,17 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> MailTest()
+    // [HttpGet]
+    // public async Task<IActionResult> MailTest()
+    // {
+    //     await _mailService.SendEmailAsync("tager_mail", "sample mail", "content");
+    //     return Ok();
+    // }
+
+    [HttpPost("update-password")]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordCommandRequest request)
     {
-        await _mailService.SendEmailAsync("", "", "");
-        return Ok();
+        UpdatePasswordCommandResponse response = await _mediator.Send(request);
+        return Ok(response);
     }
 }
