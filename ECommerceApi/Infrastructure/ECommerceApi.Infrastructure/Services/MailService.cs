@@ -52,4 +52,14 @@ public class MailService : IMailService
         
         await SendEmailAsync(to, "Password Reset Request", mail.ToString());
     }
+
+    public async Task SendCompletedOrderMailAsync(string to, string orderCode, DateTime orderDate, string userName)
+    {
+        string mail = $"Dear {userName},<br><br>" +
+                      $"Your order with the code <b>{orderCode}</b> that you placed on <b>{orderDate}</b> has been completed and handed over to the shipping company.<br><br>" +
+                      "Best regards,<br>E-Commerce";
+
+        await SendEmailAsync(to, $"{orderCode} - Your Order Has Been Completed", mail);
+
+    }
 }

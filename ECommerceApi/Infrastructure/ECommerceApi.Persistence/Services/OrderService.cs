@@ -109,13 +109,25 @@ public class OrderService : IOrderService
         await _orderRepository.SaveChangesAsync();
     }
 
-    public async Task CompleteOrderAsync(string id)
+    public async Task<(bool, CompletedOrderDTO)> CompleteOrderAsync(string id)
     {
-        Order order = await _orderRepository.GetByIdAsync(id);
+        Order? order = await _orderRepository.dbSet
+            .Include(o => o.Basket)
+            .ThenInclude(b => b.User)
+            .FirstOrDefaultAsync(o => o.Id == Guid.Parse(id));
+        
         if (order is not null)
         {
             await _completedOrderRepository.AddAsync(new CompletedOrder() { OrderId = Guid.Parse(id) });
             await _completedOrderRepository.SaveChangesAsync();
+            return (true, new()
+            {
+                OrderCode = order.OrderCode,
+                OrderDate = order.CreatedDate,
+                Username = order.Basket.User.UserName,
+                EMail = order.Basket.User.Email,
+            });
         }
+        return (false, null);
     }
 }
