@@ -34,12 +34,14 @@ public static class ServiceRegistration
         services.AddScoped<IFileRepository, FileRepository>();
         services.AddScoped<IInvoiceFileRepository, InvoiceFileRepository>();
         services.AddScoped<IProductImageFileRepository, ProductImageFileRepository>();
+        services.AddScoped<IBasketRepository, BasketRepository>();
+        services.AddScoped<IBasketItemRepository, BasketItemRepository>();
+        services.AddScoped<ICompletedOrderRepository, CompletedOrderRepository>();
+        
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IExternalAuthentication, AuthService>();
         services.AddScoped<IInternalAuthentication, AuthService>();
-        services.AddScoped<IBasketRepository, BasketRepository>();
-        services.AddScoped<IBasketItemRepository, BasketItemRepository>();
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IOrderService, OrderService>();
     }
