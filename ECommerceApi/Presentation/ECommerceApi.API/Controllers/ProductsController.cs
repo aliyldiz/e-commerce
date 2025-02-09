@@ -1,5 +1,8 @@
 using System.Net;
 using Bogus;
+using ECommerceApi.Application.Consts;
+using ECommerceApi.Application.CustomAttributes;
+using ECommerceApi.Application.Enums;
 using ECommerceApi.Application.Features.Commands.Product.CreateProduct;
 using ECommerceApi.Application.Features.Commands.Product.RemoveProduct;
 using ECommerceApi.Application.Features.Commands.Product.UpdateProduct;
@@ -58,7 +61,8 @@ public class ProductsController : ControllerBase
     }
     
     [HttpPost]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Writing,Definition = "Create Product")]
     public async Task<IActionResult> Post(CreateProductCommandRequest requestModel)
     {
         await _mediator.Send(requestModel);
@@ -66,7 +70,8 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Update Product")]
     public async Task<IActionResult> Put([FromBody] UpdateProductCommandRequest requestModel)
     {
         await _mediator.Send(requestModel);
@@ -74,7 +79,8 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{Id}")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Deleting, Definition = "Remove Product")]
     public async Task<IActionResult> Delete([FromRoute] RemoveProductCommandRequest requestModel)
     {
         var result = await _mediator.Send(requestModel);
@@ -82,15 +88,18 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Writing, Definition = "Upload Product File")]
     public async Task<IActionResult> Upload([FromQuery] UploadProductImageCommandRequest requestModel)
     {
         requestModel.Files = Request.Form.Files;
         await _mediator.Send(requestModel);
         return Ok();
     }
-
+    
     [HttpGet("[action]/{Id}")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Reading, Definition = "Get Products Images")]
     public async Task<IActionResult> GetProductImages([FromRoute] GetProductImagesQueryRequest requestModel)
     {
         List<GetProductImagesQueryResponse> images = await _mediator.Send(requestModel);
@@ -98,7 +107,8 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("[action]/{Id}")]
-    [Authorize(AuthenticationSchemes = "Admin")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Deleting, Definition = "Remove Product Image")]
     public async Task<IActionResult> DeleteProductImage([FromRoute] RemoveProductImageCommandRequest requestModel, [FromQuery] string imageId)
     {
         requestModel.ImageId = imageId;
@@ -107,6 +117,8 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("[action]")]
+    [Authorize(AuthenticationSchemes = AuthorizeDefinitionConstants.Admin)]
+    [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Change Showcase Image")]
     public async Task<IActionResult> ChangeShowcaseImage([FromQuery] ChangeShowcaseImageCommandRequest requestModel)
     {
         ChangeShowcaseImageCommandResponse response = await _mediator.Send(requestModel);

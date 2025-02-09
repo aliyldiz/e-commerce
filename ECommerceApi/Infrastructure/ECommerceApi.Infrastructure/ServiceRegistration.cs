@@ -1,8 +1,10 @@
 using System.Net.Mail;
 using ECommerceApi.Application.Abstractions.Services;
+using ECommerceApi.Application.Abstractions.Services.Configuration;
 using ECommerceApi.Application.Abstractions.Storage;
 using ECommerceApi.Application.Abstractions.Token;
 using ECommerceApi.Infrastructure.Services;
+using ECommerceApi.Infrastructure.Services.Configuration;
 using ECommerceApi.Infrastructure.Services.Storage;
 using ECommerceApi.Infrastructure.Services.Token;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ public static class ServiceRegistration
         services.AddScoped<IStorageService, StorageService>();
         services.AddScoped<ITokenHandler, TokenHandler>();
         services.AddScoped<IMailService, MailService>();
+        services.AddScoped<IApplicationService, ApplicationService>();
     }
 
     public static void AddStorage<T>(this IServiceCollection services) where T : class, IStorage
