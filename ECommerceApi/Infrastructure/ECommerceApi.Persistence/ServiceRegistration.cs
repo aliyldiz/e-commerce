@@ -37,6 +37,8 @@ public static class ServiceRegistration
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<IBasketItemRepository, BasketItemRepository>();
         services.AddScoped<ICompletedOrderRepository, CompletedOrderRepository>();
+        services.AddScoped<IEndpointRepository, EndpointRepository>();
+        services.AddScoped<IMenuRepository, MenuRepository>();
         
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
@@ -45,5 +47,6 @@ public static class ServiceRegistration
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
     }
 }
