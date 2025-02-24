@@ -1,5 +1,6 @@
 using System.Net;
 using Bogus;
+using ECommerceApi.Application.Abstractions.Services;
 using ECommerceApi.Application.Consts;
 using ECommerceApi.Application.CustomAttributes;
 using ECommerceApi.Application.Enums;
@@ -25,10 +26,12 @@ namespace ECommerceApi.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IProductService _productService;
 
-    public ProductsController(IMediator mediator)
+    public ProductsController(IMediator mediator, IProductService productService)
     {
         _mediator = mediator;
+        _productService = productService;
     }
 
     [HttpGet]
@@ -58,6 +61,13 @@ public class ProductsController : ControllerBase
     {
         var product = await _mediator.Send(requestModel);
         return Ok(product);
+    }
+    
+    [HttpGet("qrcode/{productId}")]
+    public async Task<IActionResult> GetQrCodeToProduct([FromRoute] string productId)
+    {
+        var data = await _productService.QrCodeToProductAsync(productId);
+        return File(data, "image/png");
     }
     
     [HttpPost]
