@@ -25,26 +25,31 @@ public class AuthorizationEndpointService : IAuthorizationEndpointService
 
     public async Task AssignRoleEndpointAsync(string[] roles, string menu, string code, Type type)
     {
-        Menu _menu = await _menuRepository.GetSingleAsync(m => m.Name == menu);
-        if (_menu == null)
+        var _menu = await _menuRepository.dbSet.FirstOrDefaultAsync(m => m.Name == menu) 
+                    ?? new Menu { Id = Guid.NewGuid(), Name = menu };
+
+        if (_menu.Id == Guid.Empty)
         {
-            _menu = new()
-            {
-                Id = Guid.NewGuid(),
-                Name = menu
-            };
             await _menuRepository.AddAsync(_menu);
-            await _menuRepository.SaveChangesAsync();
         }
-        
-        Endpoint? endpoint = await _endpointRepository.dbSet.Include(e => e.Menu).Include(e => e.Roles).FirstOrDefaultAsync(e => e.Code == code && e.Menu.Name == menu);
+
+        var endpoint = await _endpointRepository.dbSet
+            .Include(e => e.Menu)
+            .Include(e => e.Roles)
+            .FirstOrDefaultAsync(e => e.Code == code && e.Menu.Name == menu);
+
         if (endpoint == null)
         {
             var action = _applicationService.GetAuthorizeDefinitionEndpoints(type)
                 .FirstOrDefault(m => m.Name == menu)?
                 .Actions.FirstOrDefault(e => e.Code == code);
 
-            endpoint = new()
+            if (action == null)
+            {
+                throw new InvalidOperationException($"Action with code {code} not found in menu {menu}.");
+            }
+
+            endpoint = new Endpoint
             {
                 Code = action.Code,
                 ActionType = action.ActionType,
@@ -53,19 +58,17 @@ public class AuthorizationEndpointService : IAuthorizationEndpointService
                 Id = Guid.NewGuid(),
                 Menu = _menu
             };
-            
+
             await _endpointRepository.AddAsync(endpoint);
-            await _endpointRepository.SaveChangesAsync();
         }
-        
-        foreach (var role in endpoint.Roles)
-            endpoint.Roles.Remove(role);
-        
+
         var appRoles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
-        
+        endpoint.Roles.Clear();
         foreach (var role in appRoles)
+        {
             endpoint.Roles.Add(role);
-        
+        }
+
         await _endpointRepository.SaveChangesAsync();
     }
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using ECommerceApi.API.Configurations.ColumnWriters;
 using ECommerceApi.API.Extensions;
+using ECommerceApi.API.Filters;
 using ECommerceApi.Application;
 using ECommerceApi.Application.Validators;
 using ECommerceApi.Infrastructure;
@@ -67,8 +68,11 @@ builder.Services.AddHttpLogging(logging =>
     logging.ResponseBodyLogLimit = 4096;
 });
 
-builder.Services.AddControllers(options => 
-        options.Filters.Add<ValidationFilter>())
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<ValidationFilter>();
+        options.Filters.Add<RolePermissionFilter>();
+    })
     .ConfigureApiBehaviorOptions(options => 
         options.SuppressModelStateInvalidFilter = true);
 

@@ -18,7 +18,6 @@ export class HttpErrorHandlerInterceptorService implements HttpInterceptor{
       switch (error.status) {
         case HttpStatusCode.Unauthorized:
           this.userAuthService.refreshTokenLogin(localStorage.getItem('refreshToken'), (state) => {
-            debugger;
             if (!state) {
               const url = this.router.url;
               if (url == "/products")
@@ -32,7 +31,12 @@ export class HttpErrorHandlerInterceptorService implements HttpInterceptor{
                   position: ToastrPosition.BottomRight
                 });
             }
-          }).then(data => {});
+          }).then(data => {
+            this.toastrService.message('Unauthorized', 'error', {
+              messageType: ToastrMessageType.Error,
+              position: ToastrPosition.BottomRight
+            });
+          });
           break;
         case HttpStatusCode.InternalServerError:
           this.toastrService.message('Server Error', 'error', {
